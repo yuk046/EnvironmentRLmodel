@@ -27,8 +27,13 @@
             <version>5.9.2</version>
             <scope>test</scope>
         </dependency>
+        <!-- Plotting library for producing PNG charts similar to MATLAB plots -->
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.5.3</version>
+        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>

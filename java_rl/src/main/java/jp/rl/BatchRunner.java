@@ -8,6 +8,13 @@ import java.io.FileWriter;
 import java.nio.file.Files;
 import java.util.*;
 
+// JFreeChart imports for plotting (to reproduce MATLAB plots)
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.ChartUtils;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
 public class BatchRunner {
     private final double[] betas;
     private final int numAgents;
@@ -24,6 +31,7 @@ public class BatchRunner {
     public void run() throws Exception {
         File dataDir = new File("data");
         if (!dataDir.exists()) Files.createDirectories(dataDir.toPath());
+        List<Double> meanAddictedAcrossBetas = new ArrayList<>();
 
         for (int ib = 0; ib < betas.length; ib++) {
             double beta = betas[ib];
@@ -35,9 +43,13 @@ public class BatchRunner {
 
             for (int runIdx = 0; runIdx < numRuns; runIdx++) {
                 int addictedCount = 0;
+                // match MATLAB rng seed per-run: rngBase + runIdx + ib*1e4
+                long rngBase = 0L;
+                long seedRun = rngBase + runIdx + (ib * 10000L);
+                Random runRng = new Random(seedRun);
                 for (int agentIdx = 0; agentIdx < numAgents; agentIdx++) {
-                    long seed = runIdx + agentIdx + (ib * 10000);
-                    EpisodeRunner er = new EpisodeRunner(environment, seed);
+                    // use the same runRng stream across agents so draws match MATLAB's rng seeded per run
+                    EpisodeRunner er = new EpisodeRunner(environment, runRng);
                     Result res = er.runEpisode(200, 4); // short default
 
                     // determine addiction based on last states (use last state visits)
@@ -68,6 +80,25 @@ public class BatchRunner {
                 fw.write(g.toJson(out));
             }
             System.out.println("Saved results for beta=" + beta);
+
+            // record mean across runs for plotting
+            double sum = 0.0;
+            for (double v : percentAddictedPerRun) sum += v;
+            double mean = percentAddictedPerRun.length>0 ? sum / percentAddictedPerRun.length : 0.0;
+            meanAddictedAcrossBetas.add(mean);
+        }
+
+        // create plot percentAddicted vs beta (PNG)
+        try {
+            XYSeries series = new XYSeries("% Addicted");
+            for (int i = 0; i < betas.length; i++) series.add(betas[i], meanAddictedAcrossBetas.get(i));
+            XYSeriesCollection dataset = new XYSeriesCollection(series);
+            JFreeChart chart = ChartFactory.createXYLineChart("Percent Addicted vs Beta", "beta", "% addicted", dataset);
+            File chartFile = new File(dataDir, "percentAddicted_vs_beta.png");
+            ChartUtils.saveChartAsPNG(chartFile, chart, 800, 600);
+            System.out.println("Saved plot: " + chartFile.getAbsolutePath());
+        } catch (Exception e) {
+            System.err.println("Failed to create plot: " + e.getMessage());
         }
     }
 }

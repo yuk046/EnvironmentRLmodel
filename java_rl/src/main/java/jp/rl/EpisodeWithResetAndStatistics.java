@@ -57,7 +57,7 @@ public class EpisodeWithResetAndStatistics {
                     // modify learning factors temporarily
                     inputVals.parametersMBFW.modelLearningFactor = inputVals.parametersMBFW.modelLearningFactor * inputVals.therapyModelLF;
                     inputVals.parametersMBFW.modelDecay = inputVals.parametersMBFW.modelDecay * 2.0;
-                    inputVals.parametersMF.alpha = inputVals.parametersMF.alpha * inputVals.therapyMFLFF;
+                    inputVals.parametersMF.alpha_MF = inputVals.parametersMF.alpha_MF * inputVals.therapyMFLFF;
                 }
             }
 
@@ -74,7 +74,7 @@ public class EpisodeWithResetAndStatistics {
             boolean updateQFlag = inputVals.parametersMF != null && inputVals.parametersMF.updateQTablePerm;
             boolean internalReplayFlag = inputVals.parametersMBBW != null && inputVals.parametersMBBW.internalReplay == 1;
 
-            Stepper.StepResult sr = stepper.step(currentState, qTablePerm, model, inputVals.parametersMF, updateModelFlag, updateQFlag, new Random());
+            Stepper.StepResult sr = stepper.step(currentState, qTablePerm, model, inputVals.parametersMF, updateModelFlag, updateQFlag, stateActionVisitCounts, new Random());
 
             int action = sr.action;
             double reward = sr.reward;

@@ -6,9 +6,9 @@ public class EpisodeRunner {
     private final Environment env;
     private final Random rng;
 
-    public EpisodeRunner(Environment env, long seed) {
+    public EpisodeRunner(Environment env, Random rng) {
         this.env = env;
-        this.rng = new Random(seed);
+        this.rng = rng;
     }
 
     public Result runEpisode(int maxSteps, int startState) {
@@ -22,9 +22,12 @@ public class EpisodeRunner {
         MFParameters mf = new MFParameters();
         Stepper stepper = new Stepper(env);
 
+        // state-action visit counts (1-based indexing accommodated by sizing)
+        int[][] stateActionVisitCounts = new int[env.numStates+1][env.numActions+1];
+
         int currentState = startState;
         for (int step = 0; step < maxSteps; step++) {
-            Stepper.StepResult r = stepper.step(currentState, q, model, mf, true, true, rng);
+            Stepper.StepResult r = stepper.step(currentState, q, model, mf, true, true, stateActionVisitCounts, rng);
             lastStates.add(currentState);
             lastActions.add(r.action);
             lastRewards.add(r.reward);
