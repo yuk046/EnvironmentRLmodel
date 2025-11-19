@@ -19,6 +19,8 @@ public class EpisodeRunner {
         // Create simple model and Q-table
         Model model = Model.createFromEnvironment(env, 4, false);
         QTablePerm q = new QTablePerm(env.numStates, env.numActions);
+        // reset eligibility traces at start of episode to match typical TD(lambda) episode semantics
+        q.resetEligibility();
         MFParameters mf = new MFParameters();
         Stepper stepper = new Stepper(env);
 

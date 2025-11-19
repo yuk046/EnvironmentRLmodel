@@ -7,6 +7,8 @@ public class EpisodeWithResetAndStatistics {
     public static Result run(InputVals inputVals) {
         // Initialize QTablePerm
     QTablePerm qTablePerm = new QTablePerm(inputVals.Environment.numStates, inputVals.Environment.numActions);
+        // ensure eligibility traces are cleared at the start of the run/episode
+        qTablePerm.resetEligibility();
         // priorCounts from MATLAB example
         int priorCounts = 4;
         boolean copyTransitions = inputVals.parametersMBFW != null && inputVals.parametersMBFW.updateModel;
