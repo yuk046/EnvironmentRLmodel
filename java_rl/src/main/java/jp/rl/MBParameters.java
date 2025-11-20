@@ -1,7 +1,7 @@
 package jp.rl;
 
 public class MBParameters {
-    public double alpha = 0.1;
+    public double alpha = 0.2;
     public double mb_factor = 0.5;
     public double mf_factor = 0.5;
     public boolean computePolicyWithDP = false;

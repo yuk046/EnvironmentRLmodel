@@ -200,8 +200,14 @@ public class InternalSimulator {
     public static class InternalReplayResult { public QTablePerm q; public double dmax; public double dmean; }
     public static InternalReplayResult internalReplay(QTablePerm qOld, Model model, MBReplayParameters bparams, int[][] stateActionVisitCounts, int reset, Random rng) {
         QTablePerm qNew = qOld;
+        // snapshot original Q values so we can compute diffs after in-place updates
+        double[][] oldSnapshot = new double[qOld.mean.length][qOld.mean[0].length];
+        for (int i=0;i<qOld.mean.length;i++) for (int j=0;j<qOld.mean[0].length;j++) oldSnapshot[i][j] = qOld.mean[i][j];
         int stepsTotal = 0;
         int sweeps = 0;
+        int updateCount = 0;
+        double sumUpdateAbs = 0.0;
+        double maxUpdateAbs = 0.0;
         while ((sweeps <= 10 * bparams.sweeps) && (stepsTotal < 10 * bparams.stepsTotal)) {
             sweeps++;
             int steps = 0;
@@ -232,16 +238,30 @@ public class InternalSimulator {
                     // update QTablePerm with simulated reward
                     QUpdater.UpdateResult ur = QUpdater.updateQTablePerm(qNew, dar.reward, dar.nextState, actionsim, currentState, stateActionVisitCounts, new MFParameters(), reset);
                     qNew = ur.Q;
+                    // track update magnitudes reported by QUpdater
+                    if (ur != null) {
+                        double mag = Math.abs(ur.maxvar);
+                        if (mag > 1e-12) {
+                            updateCount++;
+                            sumUpdateAbs += mag;
+                            if (mag > maxUpdateAbs) maxUpdateAbs = mag;
+                        }
+                    }
                     reset = 0;
                 }
             }
         }
-        // compute D
-        double[] oldv = flatten(qOld.mean); double[] newv = flatten(qNew.mean);
-        double dmax = Double.NEGATIVE_INFINITY; double dsum = 0.0;
-        for (int i=0;i<oldv.length;i++) { double d = newv[i] - oldv[i]; if (d > dmax) dmax = d; dsum += d; }
-        double dmean = dsum / oldv.length;
-        InternalReplayResult res = new InternalReplayResult(); res.q = qNew; res.dmax = dmax; res.dmean = dmean; return res;
+        // compute absolute differences across all entries using the pre-update snapshot
+        double[] oldv = flatten(oldSnapshot); double[] newv = flatten(qNew.mean);
+        double dmaxAll = 0.0; double dsumAll = 0.0;
+        for (int i=0;i<oldv.length;i++) { double d = Math.abs(newv[i] - oldv[i]); if (d > dmaxAll) dmaxAll = d; dsumAll += d; }
+        double dmeanAll = oldv.length>0 ? dsumAll / oldv.length : 0.0;
+
+        // log summary of replay updates
+        System.out.println(String.format("[internalReplay] updates=%d maxUpdateAbs=%.6e meanUpdateAbs=%.6e dmaxAll=%.6e dmeanAll=%.6e",
+                updateCount, maxUpdateAbs, (updateCount>0?sumUpdateAbs/updateCount:0.0), dmaxAll, dmeanAll));
+
+        InternalReplayResult res = new InternalReplayResult(); res.q = qNew; res.dmax = dmaxAll; res.dmean = dmeanAll; return res;
     }
 
     private static int[] listToArray(List<Integer> list) { int[] a=new int[list.size()]; for (int i=0;i<list.size();i++) a[i]=list.get(i); return a; }
