@@ -198,7 +198,7 @@ public class InternalSimulator {
 
     // internalReplay port
     public static class InternalReplayResult { public QTablePerm q; public double dmax; public double dmean; }
-    public static InternalReplayResult internalReplay(QTablePerm qOld, Model model, MBReplayParameters bparams, int[][] stateActionVisitCounts, int reset, Random rng) {
+    public static InternalReplayResult internalReplay(QTablePerm qOld, Model model, MBReplayParameters bparams, int[][] stateActionVisitCounts, int reset, Random rng, MFParameters mfParameters) {
         QTablePerm qNew = qOld;
         // snapshot original Q values so we can compute diffs after in-place updates
         double[][] oldSnapshot = new double[qOld.mean.length][qOld.mean[0].length];
@@ -236,7 +236,7 @@ public class InternalSimulator {
                 }
                 else {
                     // update QTablePerm with simulated reward
-                    QUpdater.UpdateResult ur = QUpdater.updateQTablePerm(qNew, dar.reward, dar.nextState, actionsim, currentState, stateActionVisitCounts, new MFParameters(), reset);
+                    QUpdater.UpdateResult ur = QUpdater.updateQTablePerm(qNew, dar.reward, dar.nextState, actionsim, currentState, stateActionVisitCounts, mfParameters, reset);
                     qNew = ur.Q;
                     // track update magnitudes reported by QUpdater
                     if (ur != null) {
@@ -269,7 +269,7 @@ public class InternalSimulator {
 
     // runInternalSimulationInResetAndStatistics port
     public static class RunInternalResult { public QTablePerm qIntegrated; public int N_itr; public int[][] stateActionVisitCountsOut; }
-    public static RunInternalResult runInternalSimulationInResetAndStatistics(QTablePerm QTablePerm, int currentState, Model model, MBParameters MBParameters, int[][] stateActionVisitCounts) {
+    public static RunInternalResult runInternalSimulationInResetAndStatistics(QTablePerm QTablePerm, int currentState, Model model, MBParameters MBParameters, int[][] stateActionVisitCounts, Random rng, MFParameters mfParameters) {
         RunInternalResult res = new RunInternalResult();
         res.N_itr = 1;
         QTablePerm qIntegrated = new QTablePerm(QTablePerm.mean.length-1, QTablePerm.mean[0].length-1);
@@ -279,7 +279,6 @@ public class InternalSimulator {
         QTablePerm QTablePermLocal = MBParameters.useMFToDriveMB ? QTablePerm : qIntegrated;
         int totalsteps = 0;
         int N_itr = 1;
-        Random rng = new Random();
         while (N_itr <= MBParameters.MaxItrMB && totalsteps < MBParameters.MaxTotalSimSteps) {
             int currentStateSim = currentState;
             int path_step = 0;
@@ -289,9 +288,8 @@ public class InternalSimulator {
                 res.stateActionVisitCountsOut[currentStateSim][actionSim]++;
                 DoActionResult dar = doActionInModel(actionSim, model, currentStateSim, MBParameters, rng);
                 if (!dar.valid) break;
-                // update base
-                // cannot access QUpdater.UpdateBaseResult (it's private); call the public updateQTablePerm
-                QUpdater.UpdateResult ur = QUpdater.updateQTablePerm(QTablePermLocal, dar.reward, dar.nextState, actionSim, currentStateSim, res.stateActionVisitCountsOut, new MFParameters(), 0);
+                // update base using provided MFParameters
+                QUpdater.UpdateResult ur = QUpdater.updateQTablePerm(QTablePermLocal, dar.reward, dar.nextState, actionSim, currentStateSim, res.stateActionVisitCountsOut, mfParameters, 0);
                 QTablePermLocal.mean[currentStateSim][actionSim] = ur.Q.mean[currentStateSim][actionSim];
                 qIntegrated.mean[currentStateSim][actionSim] = ur.Q.mean[currentStateSim][actionSim];
                 currentStateSim = dar.nextState;
@@ -304,9 +302,9 @@ public class InternalSimulator {
     }
 
     // runInternalSimulation port
-    public static RunInternalResult runInternalSimulation(QTablePerm QTablePerm, int currentState, Model model, MBParameters MBParameters, boolean resetSim) {
+    public static RunInternalResult runInternalSimulation(QTablePerm QTablePerm, int currentState, Model model, MBParameters MBParameters, boolean resetSim, Random rng, MFParameters mfParameters) {
         // use persistent-like stateActionVisitCounts stored in static map keyed by model hash
         int[][] stateActionVisitCounts = new int[model.numStates+1][model.numActions+1];
-        return runInternalSimulationInResetAndStatistics(QTablePerm, currentState, model, MBParameters, stateActionVisitCounts);
+        return runInternalSimulationInResetAndStatistics(QTablePerm, currentState, model, MBParameters, stateActionVisitCounts, rng, mfParameters);
     }
 }

@@ -20,4 +20,10 @@ public class EnvironmentParameters {
     public int autoGen = 1;
     public double reducedPunishmentF = 0.3;
     public double minFactor = 0.001;
+    // Timing / experiment parameters (defaults chosen to match MATLAB RunExperimentLearning96)
+    public int maxSteps = 1050;       // MATLAB: RunExperimentLearning96 uses 2600
+    public int startState = 4;        // initial state to match MATLAB code
+    public int initDrugStartSteps = 50;
+    public int therapyStartSteps = 1050;
+    public int therapyEndSteps = 1050; // therapyStartSteps + 1000 by convention
 }

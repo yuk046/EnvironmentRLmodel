@@ -93,7 +93,7 @@ public class EpisodeWithResetAndStatistics {
             if (internalReplayFlag) {
                 // call internalReplay to update qTablePerm using model
                 System.out.println("[internalReplay] starting internalReplay (step=" + nStep + ")");
-                InternalSimulator.InternalReplayResult irr = InternalSimulator.internalReplay(qTablePerm, model, inputVals.parametersMBBW, stateActionVisitCountsSimul, reset, new Random());
+                InternalSimulator.InternalReplayResult irr = InternalSimulator.internalReplay(qTablePerm, model, inputVals.parametersMBBW, stateActionVisitCountsSimul, reset, new Random(), inputVals.parametersMF);
                 if (irr != null) {
                     System.out.println(String.format("[internalReplay] dmax=%.6f dmean=%.6f", irr.dmax, irr.dmean));
                     if (irr.q != null) {
@@ -184,7 +184,7 @@ public class EpisodeWithResetAndStatistics {
 
             if (internalReplayFlag) {
                 System.out.println("[internalReplay] starting internalReplay (debug step=" + nStep + ")");
-                InternalSimulator.InternalReplayResult irr = InternalSimulator.internalReplay(qTablePerm, model, inputVals.parametersMBBW, stateActionVisitCountsSimul, 1, rng);
+                InternalSimulator.InternalReplayResult irr = InternalSimulator.internalReplay(qTablePerm, model, inputVals.parametersMBBW, stateActionVisitCountsSimul, 1, rng, inputVals.parametersMF);
                 if (irr != null) {
                     System.out.println(String.format("[internalReplay] dmax=%.6f dmean=%.6f", irr.dmax, irr.dmean));
                     if (irr.q != null) {
@@ -196,7 +196,7 @@ public class EpisodeWithResetAndStatistics {
             // If MB runInternalSimulation flag is set, run planning and integrate MB Q into QTablePerm
             if (inputVals.parametersMBFW != null && inputVals.parametersMBFW.runInternalSimulation) {
                 System.out.println("[runInternalSimulation] running planning integration (step=" + nStep + ")");
-                InternalSimulator.RunInternalResult rres = InternalSimulator.runInternalSimulationInResetAndStatistics(qTablePerm, currentState, model, inputVals.parametersMBFW, stateActionVisitCountsSimul);
+                InternalSimulator.RunInternalResult rres = InternalSimulator.runInternalSimulationInResetAndStatistics(qTablePerm, currentState, model, inputVals.parametersMBFW, stateActionVisitCountsSimul, rng, inputVals.parametersMF);
                 if (rres != null && rres.qIntegrated != null) {
                     // compute difference before/after integration for visibility
                     int S = inputVals.Environment.numStates;

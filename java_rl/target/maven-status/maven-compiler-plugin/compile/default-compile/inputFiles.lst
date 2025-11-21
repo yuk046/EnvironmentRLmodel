@@ -1,19 +1,19 @@
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\MBReplayParameters.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\Model.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\DP.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\Stepper.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\QUpdater.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\Environment.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\EnvironmentParameters.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\InputVals.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\EpisodeRunner.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\MBParameters.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\MFParameters.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\InternalSimulator.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\BatchRunner.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\DebugMain.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\Main.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\QTablePerm.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\Utilities.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\Result.java
-C:\Users\Yukinari\Documents\EnvironmentRLmodel\java_rl\src\main\java\jp\rl\EpisodeWithResetAndStatistics.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/QUpdater.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/EpisodeWithResetAndStatistics.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/DebugMain.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/MFParameters.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/Model.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/DP.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/MBParameters.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/Stepper.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/MBReplayParameters.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/InputVals.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/InternalSimulator.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/BatchRunner.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/Environment.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/QTablePerm.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/EnvironmentParameters.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/EpisodeRunner.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/Main.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/Utilities.java
+/Users/yukinari/Downloads/Environment RLmode/java_rl/src/main/java/jp/rl/Result.java
