@@ -11,7 +11,11 @@ public class EpisodeWithResetAndStatistics {
         qTablePerm.resetEligibility();
         // priorCounts from MATLAB example
         int priorCounts = 4;
-        boolean copyTransitions = inputVals.parametersMBFW != null && inputVals.parametersMBFW.updateModel;
+    // Do NOT copy environment transitions into the initial model: force MB to learn from experience
+    // Previously this used inputVals.parametersMBFW.updateModel; we disable initial copy to avoid MB
+    // starting with full knowledge and dominating behavior.
+    // モデルベース学習を強制的に経験から学習させるため、環境の遷移を初期モデルにコピーしないようにする。
+    boolean copyTransitions = false;
     Model model = Model.createFromEnvironment(inputVals.Environment, priorCounts, copyTransitions);
 
     Model healthyModel = model;
@@ -72,6 +76,7 @@ public class EpisodeWithResetAndStatistics {
 
             // execute agent step
             boolean runInternalSim = inputVals.parametersMBFW != null && inputVals.parametersMBFW.runInternalSimulation;
+            // keep updateModelFlag as-is (whether MB updates model online)
             boolean updateModelFlag = inputVals.parametersMBFW != null && inputVals.parametersMBFW.updateModel;
             boolean updateQFlag = inputVals.parametersMF != null && inputVals.parametersMF.updateQTablePerm;
             boolean internalReplayFlag = inputVals.parametersMBBW != null && inputVals.parametersMBBW.internalReplay == 1;
