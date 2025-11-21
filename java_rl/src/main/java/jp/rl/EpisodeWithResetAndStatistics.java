@@ -195,7 +195,8 @@ public class EpisodeWithResetAndStatistics {
 
             // If MB runInternalSimulation flag is set, run planning and integrate MB Q into QTablePerm
             if (inputVals.parametersMBFW != null && inputVals.parametersMBFW.runInternalSimulation) {
-                System.out.println("[runInternalSimulation] running planning integration (step=" + nStep + ")");
+                // コメントアウト
+                // System.out.println("[runInternalSimulation] running planning integration (step=" + nStep + ")");
                 InternalSimulator.RunInternalResult rres = InternalSimulator.runInternalSimulationInResetAndStatistics(qTablePerm, currentState, model, inputVals.parametersMBFW, stateActionVisitCountsSimul, rng, inputVals.parametersMF);
                 if (rres != null && rres.qIntegrated != null) {
                     // compute difference before/after integration for visibility
@@ -221,7 +222,8 @@ public class EpisodeWithResetAndStatistics {
                         sumAbs += d; cnt++;
                     }
                     double meanAbs = cnt>0 ? sumAbs / cnt : 0.0;
-                    System.out.println(String.format("[runInternalSimulation] integrated MB Q into QTablePerm (mbf=%.3f mff=%.3f) maxDiff=%.6e meanDiff=%.6e", mbf, mff, maxAbs, meanAbs));
+                    // コメントアウト
+                    // System.out.println(String.format("[runInternalSimulation] integrated MB Q into QTablePerm (mbf=%.3f mff=%.3f) maxDiff=%.6e meanDiff=%.6e", mbf, mff, maxAbs, meanAbs));
                 }
             }
         }

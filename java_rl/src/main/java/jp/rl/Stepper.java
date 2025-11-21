@@ -89,10 +89,12 @@ public class Stepper {
         int newState = t.nextState;
         double reward = t.reward;
 
+        // モデルベースの更新
         if (updateModelFlag) {
             model.updateModel(currentState, action, newState, reward, 0.999, false, 1.0);
         }
 
+        // モデルフリーのQテーブルの更新
         if (updateQTablePermFlag) {
             QUpdater.UpdateResult ur = QUpdater.updateQTablePerm(q, reward, newState, action, currentState, stateActionVisitCounts, mfParams, 0);
             q = ur.Q;

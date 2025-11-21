@@ -64,6 +64,7 @@ public class QUpdater {
                         int f = counts[s][a]; if (f <= 0) f = 1;
                         alphaToUse = parameters.alpha_MF / (double) f;
                     }
+                    // TD誤差 $\delta$ (d) を、すべての状態・行動ペアのトレース $e(s, a)$ と学習率 $\alpha$ に乗じて、Q値を更新します。
                     double change = alphaToUse * QtableIntegrated.eTrace[s][a] * d;
                     QtableIntegrated.mean[s][a] += change;
                     maxChange = Math.max(maxChange, Math.abs(change));
@@ -110,6 +111,7 @@ public class QUpdater {
         double newVal = Double.NEGATIVE_INFINITY;
         for (int a = 1; a < QTablePerm[new_state].length; a++) if (QTablePerm[new_state][a] > newVal) newVal = QTablePerm[new_state][a];
         if (newVal == Double.NEGATIVE_INFINITY) newVal = 0.0;
+        // TD誤差
         double dreward = (reward + gamma * newVal - oldVal);
         double maxvar = alpha * dreward;
         double nq = oldVal + maxvar;

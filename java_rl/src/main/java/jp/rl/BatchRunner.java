@@ -20,12 +20,14 @@ public class BatchRunner {
     private final int numAgents;
     private final int numRuns;
     private final EnvironmentParameters envParams;
+    private final long rngBase;
 
-    public BatchRunner(double[] betas, int numAgents, int numRuns, EnvironmentParameters envParams) {
+    public BatchRunner(double[] betas, int numAgents, int numRuns, EnvironmentParameters envParams, long rngBase) {
         this.betas = betas;
         this.numAgents = numAgents;
         this.numRuns = numRuns;
         this.envParams = envParams;
+        this.rngBase = rngBase;
     }
 
     public void run() throws Exception {
@@ -43,9 +45,8 @@ public class BatchRunner {
 
             for (int runIdx = 0; runIdx < numRuns; runIdx++) {
                 int addictedCount = 0;
-                // match MATLAB rng seed per-run: rngBase + runIdx + ib*1e4
-                long rngBase = 0L;
-                long seedRun = rngBase + runIdx + (ib * 10000L);
+                // ここでnumRunsごとにシードを設定している。
+                long seedRun = this.rngBase + runIdx + (ib * 10000L);
                 Random runRng = new Random(seedRun);
                 for (int agentIdx = 0; agentIdx < numAgents; agentIdx++) {
                     // use the same runRng stream across agents so draws match MATLAB's rng seeded per run
